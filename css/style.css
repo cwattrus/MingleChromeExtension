@@ -1,0 +1,21 @@
+body {
+	padding: 15px;
+	overflow-x: hidden;
+	font-family: Arial;
+}
+
+img {
+	margin: 0px;
+	border: 0px solid black;
+	vertical-align: middle;
+	
+}
+
+.some-space {
+	border: none;
+}
+
+input[type="text"] {
+  background-color: #ffffff;
+  border: none;
+}

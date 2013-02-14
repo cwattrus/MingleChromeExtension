@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Getting Started Extension's Popup</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+  </head>
+  <body>
+  <div class="row-fluid" >
+    <div class="span12">
+      <input id="story_number" autocomplete="off" placeholder="Story Number" style="border-bottom:1px orange solid; " type="text" />
+      <div style="display:none" id="edit_actions">
+        <input id="project_location" placeholder="Project Location" style="border-bottom:1px orange solid;" type="text" />
+        <button class="btn" id="set_project_url_btn" ><i class="icon-plus-sign"></i> Save Location</button> 
+        <hr class="some-space" />
+        <p><small>This is the url where we can find your cards. E.g. https://yourproject.com/cards/ </small></p>
+        <hr />
+        <p><small><i class="icon-lock"></i> This project location will be synced accross all your logged in Chrome browsers.</small></p>
+      </div>
+    </div>
+  </div>
+  <div id="actions" class="row-fluid" >
+    <div class="span7">
+        <button class="btn" id="set_story_number_btn"><i class="icon-ok"></i> Enter or Click to Go</button>
+    
+      <button class="btn" id="edit_project_url_btn"><i class="icon-wrench"></i></button>
+    </div>
+  </div>
+  <div id="loader" style="display:none">
+    <p><img src='img/ajax-loader.gif' /><small>Checking Project URL</small></p>
+  </div>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/bootstrap.js"></script>
+  <script src="popup.js"></script>
+
+   </body>
+</html>
+
