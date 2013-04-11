@@ -1,11 +1,15 @@
 var projectURL;
 
 document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('set_story_number_btn').addEventListener('click', openStory);
+  document.getElementById('set_story_number_btn').addEventListener('click', openStoryInNewTab);
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById("story_number").addEventListener("keypress", checkKey);
+  document.getElementById('view_story_list_btn').addEventListener('click', openStoryList);
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById("story_number").addEventListener("keypress", checkKeys);
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -15,19 +19,41 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById("edit_project_url_btn").addEventListener("click", function() {showSettings()});
 });
-  
-function openStory(e) {
-  var storyPage = projectURL + document.getElementById("story_number").value;
-  window.open(storyPage, '_blank');
-  window.focus();
+
+// Tracking the key presses
+map={} //I know most use an array, but the use of string indexes in arrays is questionable
+onkeydown=onkeyup=function(e){
+    e=e||event; //to deal with IE
+    map[e.keyCode]=e.type=='keydown'?true:false;
+    /*insert conditional here*/
 }
 
-function checkKey()
-{
-  if (window.event.keyCode == 13)
-  {
-      openStory();
+function checkKeys()
+{ 
+  if(map[17]) {
+    alert("control"); 
   }
+  if (map[18]&&map[13])
+  {
+      openStoryInTab();
+  }
+  else if(map[13]){
+      openStoryInNewTab();
+  }
+}
+
+function openStoryList() {
+  chrome.tabs.create({url:projectURL});
+}
+
+function openStoryInTab() {
+  var storyPage = projectURL + document.getElementById("story_number").value;
+  chrome.tabs.update(null,{url:storyPage});
+}
+
+function openStoryInNewTab() {
+  var storyPage = projectURL + document.getElementById("story_number").value;
+  chrome.tabs.create({url:storyPage});
 }
 
 $(document).ready(function() {

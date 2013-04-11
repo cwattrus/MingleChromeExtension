@@ -8,7 +8,7 @@
   <body>
   <div class="row-fluid" >
     <div class="span12">
-      <input id="story_number" autocomplete="off" placeholder="Story Number" style="border-bottom:1px orange solid; " type="text" />
+      <input id="story_number" autocomplete="off" placeholder="Story Number or Enter for All" style="border-bottom:1px orange solid; " type="text" />
       <div style="display:none" id="edit_actions">
         <input id="project_location" placeholder="Project Location" style="border-bottom:1px orange solid;" type="text" />
         <button class="btn" id="set_project_url_btn" ><i class="icon-plus-sign"></i> Save Location</button> 
@@ -21,11 +21,17 @@
   </div>
   <div id="actions" class="row-fluid" >
     <div class="span7">
-        <button class="btn" id="set_story_number_btn"><i class="icon-ok"></i> Enter or Click to Go</button>
-    
-      <button class="btn" id="edit_project_url_btn"><i class="icon-wrench"></i></button>
+        <button class="btn" id="set_story_number_btn"><i class="icon-ok"></i> View Story</button>
+        <button class="btn" id="view_story_list_btn" title="View Master Story List"><i class="icon-list"></i></button>
+        <button class="btn" id="edit_project_url_btn"><i class="icon-wrench"></i></button>
     </div>
+    <hr />
   </div>
+  <div class="row-fluid">
+      <div class="span3">
+        <small style="color: #333333">NEW! Press Alt Enter to open the story in the current tab.</small>
+      </div>
+    </div>
   <div id="loader" style="display:none">
     <p><img src='img/ajax-loader.gif' /><small>Checking Project URL</small></p>
   </div>
