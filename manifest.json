@@ -1,9 +1,9 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 4,
 
   "name": "Mingle Card Opener",
   "description": "This extension makes it easy to open up a Mingle card from anywhere either in a new tab or your current tab.",
-  "version": "1.42",
+  "version": "1.51",
   "permissions": [
     "tabs",
     "storage"
