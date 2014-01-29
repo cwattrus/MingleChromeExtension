@@ -1,40 +1,28 @@
 var projectURL;
+var cardsURL;
 
-document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('set_story_number_btn').addEventListener('click', openStoryInNewTab);
-});
+document.getElementById('set_story_number_btn').addEventListener('click', openStoryInNewTab);
+document.getElementById('view_story_list_btn').addEventListener('click', openStoryList);
+document.getElementById("story_number").addEventListener("keypress", checkKeys);
+document.getElementById("set_project_url_btn").addEventListener("click", saveProject);
+document.getElementById("edit_project_url_btn").addEventListener("click", function() {showSettings()});
 
-document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('view_story_list_btn').addEventListener('click', openStoryList);
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById("story_number").addEventListener("keypress", checkKeys);
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById("set_project_url_btn").addEventListener("click", saveProject);
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById("edit_project_url_btn").addEventListener("click", function() {showSettings()});
-});
 
 // Tracking the key presses
-map={} //I know most use an array, but the use of string indexes in arrays is questionable
+map={}
 onkeydown=onkeyup=function(e){
     e=e||event; //to deal with IE
     map[e.keyCode]=e.type=='keydown'?true:false;
-    /*insert conditional here*/
 }
 
 function checkKeys()
-{ 
+{
   if(map[17]) {
-    alert("control"); 
+    //alert("control");
   }
   if (map[18]&&map[13])
   {
+      console.log("Alt and enter");
       openStoryInTab();
   }
   else if(map[13]){
@@ -43,16 +31,16 @@ function checkKeys()
 }
 
 function openStoryList() {
-  chrome.tabs.create({url:projectURL});
+  chrome.tabs.create({url:cardsURL});
 }
 
 function openStoryInTab() {
-  var storyPage = projectURL + document.getElementById("story_number").value;
+  var storyPage = cardsURL + document.getElementById("story_number").value;
   chrome.tabs.update(null,{url:storyPage});
 }
 
 function openStoryInNewTab() {
-  var storyPage = projectURL + document.getElementById("story_number").value;
+  var storyPage = cardsURL + document.getElementById("story_number").value;
   chrome.tabs.create({url:storyPage});
 }
 
@@ -62,6 +50,8 @@ $(document).ready(function() {
 
 function checkProjectURL() {
   getProject();
+  getCards();
+  validateURLs();
   $("#loader").fadeIn(400, "");
   setTimeout(function() {
     if (!projectURL){
@@ -71,12 +61,23 @@ function checkProjectURL() {
     else {
       hideSettings();
     }
-  }, 1000) 
+  }, 1000)
+}
+
+function validateURLs() {
+  if(projectURL) {
+    var cardsTextIndex = projectURL.indexOf("/cards/");
+    if(cardsTextIndex != -1) {
+      projectURL = projectURL.substring(0, cardsTextIndex);
+      saveProjectToChromeStorage(projectURL, projectURL + "/cards/");
+    }
+  }
 }
 
 function showSettings() {
-  clearProject();
-  document.getElementById("story_number").style.display = "none";
+  getProject();
+  if(projectURL) document.getElementById("project_location").value = projectURL;
+  document.getElementById("story_time").style.display = "none";
   document.getElementById("edit_actions").style.display = "block";
   document.getElementById("actions").style.display = "none";
   document.getElementById("project_location").focus();
@@ -84,7 +85,7 @@ function showSettings() {
 
 function hideSettings() {
   $("#loader").fadeOut(200, "");
-  document.getElementById("story_number").style.display = "block";
+  document.getElementById("story_time").style.display = "block";
   document.getElementById("actions").style.display = "block";
   document.getElementById("edit_actions").style.display = "none";
   document.getElementById("story_number").focus();
@@ -92,7 +93,9 @@ function hideSettings() {
 
 function saveProject() {
   projectURL = document.getElementById("project_location").value;
-  saveToChromeStorage(projectURL);
+  validateURLs();
+  cardsURL = projectURL + "/cards/";
+  saveProjectToChromeStorage(projectURL, cardsURL);
   $("#loader").fadeIn(400, "");
     if (!projectURL){
       $("#loader").html("<small style='color:red'>Project URL cannot be blank</small>");
@@ -103,21 +106,39 @@ function saveProject() {
     }
 }
 
-function saveToChromeStorage(itemToStore) {
-  chrome.storage.sync.set({projUrl:itemToStore}, function() {
-    console.log('Project URL saved: ' + itemToStore);
+function saveProjectToChromeStorage(projectURLToStore, cardsURLToStore) {
+  chrome.storage.sync.set({project:projectURLToStore}, function() {
+    console.log("Project saved: " + projectURLToStore);
   });
+
+  if(cardsURLToStore) {
+    chrome.storage.sync.set({cards:cardsURLToStore}, function() {
+      console.log("cards saved: " + cardsURLToStore);
+    });
+  }
 }
 
 function getProject() {
-  chrome.storage.sync.get('projUrl', function(r) {
-    projectURL = r['projUrl'];
+  chrome.storage.sync.get('project', function(r) {
+    projectURL = r['project'];
+  });
+}
+
+function getCards() {
+  chrome.storage.sync.get('cards', function(r) {
+    cardsURL = r['cards'];
   });
 }
 
 function clearProject() {
-  chrome.storage.sync.remove('projUrl', function(r) {
+  chrome.storage.sync.remove('project', function(r) {
     console.log('Project Cleared');
+  });
+}
+
+function clearCards() {
+  chrome.storage.sync.remove('cards', function(r) {
+    console.log('Cards Cleared');
   });
 }
 
